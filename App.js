@@ -1,7 +1,9 @@
 import React from 'react';
-import { Text, View, Dimensions } from 'react-native';
+import { Text, View } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
+import { Provider } from 'react-redux';
 
+import store from './store';
 import AuthScreen from './screens/AuthScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import MapScreen from './screens/MapScreen';
@@ -12,7 +14,6 @@ import SettingsScreen from './screens/SettingsScreen';
 
 export default class App extends React.Component {
   render() {
-    const SCREEN_WIDTH = Dimensions.get('window').width;
     const MainNavigator = TabNavigator({
       welcome: { screen: WelcomeScreen },
       auth: { screen: AuthScreen },
@@ -24,23 +25,22 @@ export default class App extends React.Component {
             screen: StackNavigator({
             review: { screen: ReviewScreen },
             settings: { screen: SettingsScreen}
-            })
+            }, { tabBarPosition: 'bottom' })
           }
-        })
+        }, { tabBarPosition: 'bottom' })
       }
+    }, {
+      navigationOptions: {
+        tabBarVisible: false
+      },
+      lazy: true,
+      animationEnabled: false
     });
 
     return (
+      <Provider store={store}>
         <MainNavigator />
+      </Provider>
     );
   }
 }
-
-const styles = {
-  container: {
-    flex: 1
-  },
-  tabBar: {
-    tabBarPosition: 'bottom'
-  }
-};
