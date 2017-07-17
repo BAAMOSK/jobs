@@ -4,7 +4,8 @@ import qs from 'qs';
 
 import {
   FETCH_JOBS,
-  LIKE_JOB
+  LIKE_JOB,
+  CLEAR_LIKED_JOBS
 } from './types';
 
 const JOB_ROOT_URL = 'http://api.indeed.com/ads/apisearch?';
@@ -13,7 +14,7 @@ const JOB_QUERY_PARAMS = {
   format: 'json',
   v: '2',
   latlong: 1,
-  radius: 10,
+  radius: 100,
   q: 'javascript'
 };
 
@@ -24,8 +25,7 @@ const buildJobsUrl = (zipcode) => {
 
 export const fetchJobs = (region, callback) => async dispatch => {
   try {
-    // let zipcode = await reverseGeocode(region);
-    let zipcode = '33076'
+    let zipcode = await reverseGeocode(region);
     const url = buildJobsUrl(zipcode);
     let { data } = await axios.get(url);
     dispatch({ type: FETCH_JOBS, payload: data });
@@ -40,4 +40,8 @@ export const likeJob = (job) => {
     payload: job,
     type: LIKE_JOB
   };
+};
+
+export const clearLikedJobs = () => {
+  return ({ type: CLEAR_LIKED_JOBS });
 };
